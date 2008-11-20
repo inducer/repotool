@@ -1,7 +1,8 @@
-active-subprojects
+excluded-subprojects
 .*.swp
 *~
 env/
+dead
 
 # -----------------------------------------------------------------------------
 # DO NOT CHANGE ANYTHING BELOW THIS LINE

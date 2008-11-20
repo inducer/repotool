@@ -2,13 +2,14 @@
 
 set -e
 
-function list_repo_names()
+function list_all_repos()
 {
-  if test -e active-subprojects; then 
-    egrep -v '^\s*#' active-subprojects
-  else
-    egrep -v '^\s*#' subprojects
-  fi
+  cat subprojects
+}
+
+function list_active_repos()
+{
+  python list-active-repos.py
 }
 
 function emphasize()
@@ -24,14 +25,25 @@ CMD="$1"
 case "$CMD" in
   help )
     echo "$0 supports the following commands:"
+    echo "  list-all"
+    echo "  list-active"
     echo "  update-gitignore"
     echo "  clone BASE-URL [SUFFIX]"
     echo "  pull BASE-URL [SUFFIX] [BRANCH]"
     echo "  status"
+    echo "  diff"
     echo "  clean [sudo]"
     echo "  install [python-command]"
     echo "  setup-env"
     echo "  env"
+    ;;
+
+  list-all )
+    list_all_repos
+    ;;
+
+  list-active )
+    list_all_repos
     ;;
 
   update-gitignore )
@@ -52,8 +64,10 @@ case "$CMD" in
   clone )
     BASE_URL="$2"
     SUFFIX="$3"
-    for n in `list_repo_names`; do
-      git clone $BASE_URL$n$SUFFIX
+    for n in `list_all_repos`; do
+      if ! test -d $n; then 
+        git clone $BASE_URL$n$SUFFIX
+      fi
     done
     ;;
 
@@ -61,20 +75,27 @@ case "$CMD" in
     BASE_URL="$2"
     SUFFIX="$3"
     BRANCH="${4:-master}"
-    for n in `list_repo_names`; do
+    for n in `list_all_repos`; do
       git pull $BASE_URL$n$SUFFIX
     done
     ;;
 
+  diff )
+    git diff
+    for n in `list_all_repos`; do
+      (cd $n; emphasize $n; git diff)
+    done
+    ;;
   status )
-    for n in `list_repo_names`; do
-      (cd $n; git diff ; git status)
+    git status
+    for n in `list_all_repos`; do
+      (cd $n; emphasize $n; git status)
     done
     ;;
 
   clean )
     PREFIX="$2"
-    for n in `list_repo_names`; do
+    for n in `list_active_repos`; do
       (
         cd $n
         if test -e setup.py && test -d build; then
@@ -86,7 +107,7 @@ case "$CMD" in
 
   install )
     PY_COMMAND="${2:-python}"
-    for n in `list_repo_names`; do
+    for n in `list_active_repos`; do
       (
         set -e
         cd $n
