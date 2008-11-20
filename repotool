@@ -1,0 +1,113 @@
+#! /bin/sh
+
+set -e
+
+function list_repo_names()
+{
+  if test -e active-subprojects; then 
+    egrep -v '^\s*#' active-subprojects
+  else
+    egrep -v '^\s*#' subprojects
+  fi
+}
+
+function emphasize()
+{
+  echo "------------------------------------------------------------------------"
+  echo "$1"
+  echo "------------------------------------------------------------------------"
+}
+
+
+
+CMD="$1"
+case "$CMD" in
+  help )
+    echo "$0 supports the following commands:"
+    echo "  update-gitignore"
+    echo "  clone BASE-URL [SUFFIX]"
+    echo "  pull BASE-URL [SUFFIX] [BRANCH]"
+    echo "  status"
+    echo "  clean [sudo]"
+    echo "  install [python-command]"
+    echo "  setup-env"
+    echo "  env"
+    ;;
+
+  update-gitignore )
+    (
+      while read LINE; do
+        if test "$LINE" = "# PROJECTS BELOW"; then
+          echo $LINE
+          break
+        else
+          echo $LINE
+        fi
+      done
+      cat subprojects
+    ) < .gitignore > new-gitig
+    mv new-gitig .gitignore
+    ;;
+    
+  clone )
+    BASE_URL="$2"
+    SUFFIX="$3"
+    for n in `list_repo_names`; do
+      git clone $BASE_URL$n$SUFFIX
+    done
+    ;;
+
+  pull )
+    BASE_URL="$2"
+    SUFFIX="$3"
+    BRANCH="${4:-master}"
+    for n in `list_repo_names`; do
+      git pull $BASE_URL$n$SUFFIX
+    done
+    ;;
+
+  status )
+    for n in `list_repo_names`; do
+      (cd $n; git diff ; git status)
+    done
+    ;;
+
+  clean )
+    PREFIX="$2"
+    for n in `list_repo_names`; do
+      (
+        cd $n
+        if test -e setup.py && test -d build; then
+          $PREFIX rm -Rf build
+        fi
+      ) 
+    done
+    ;;
+
+  install )
+    PY_COMMAND="${2:-python}"
+    for n in `list_repo_names`; do
+      (
+        set -e
+        cd $n
+        if test -e setup.py; then
+          emphasize "BUILDING $n"
+          $PY_COMMAND setup.py install || (emphasize "COMMAND $CMD ON $n FAILED!" ; exit 1)
+        fi
+      ) || exit 1
+    done
+    ;;
+
+  setup-env )
+    virtualenv env
+    ;;
+
+  env )
+    echo "export PATH=`pwd`/env/bin:$PATH":w
+    ;;
+
+  * )
+    echo "$0: invalid command $1."
+    exit 1
+    ;;
+esac

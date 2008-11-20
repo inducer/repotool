@@ -1,0 +1,23 @@
+active-subprojects
+.*.swp
+*~
+env/
+
+# -----------------------------------------------------------------------------
+# DO NOT CHANGE ANYTHING BELOW THIS LINE
+# -----------------------------------------------------------------------------
+
+# PROJECTS BELOW
+jhbuild
+pytools
+pymbolic
+pyublas
+meshpy
+pylo
+codepy
+pycuda
+pymetis
+hedge
+pyrticle
+pyublasext
+experiments
