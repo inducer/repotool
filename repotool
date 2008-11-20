@@ -25,8 +25,7 @@ CMD="$1"
 case "$CMD" in
   help )
     echo "$0 supports the following commands:"
-    echo "  list-all"
-    echo "  list-active"
+    echo "  {list,for}-{all,active}"
     echo "  update-gitignore"
     echo "  clone BASE-URL [SUFFIX]"
     echo "  pull BASE-URL [SUFFIX] [BRANCH]"
@@ -43,17 +42,31 @@ case "$CMD" in
     ;;
 
   list-active )
-    list_all_repos
+    list_active_repos
+    ;;
+
+  for-all )
+    shift
+    for n in `list_all_repos`; do
+      (cd $n; "$@")
+    done
+    ;;
+
+  for-active )
+    shift
+    for n in `list_active_repos`; do
+      (cd $n; "$@")
+    done
     ;;
 
   update-gitignore )
     (
       while read LINE; do
         if test "$LINE" = "# PROJECTS BELOW"; then
-          echo $LINE
+          echo "$LINE"
           break
         else
-          echo $LINE
+          echo "$LINE"
         fi
       done
       cat subprojects
@@ -112,11 +125,12 @@ case "$CMD" in
         set -e
         cd $n
         if test -e setup.py; then
-          emphasize "BUILDING $n"
+          emphasize "INSTALLING $n"
           $PY_COMMAND setup.py install || (emphasize "COMMAND $CMD ON $n FAILED!" ; exit 1)
         fi
       ) || exit 1
     done
+    emphasize "INSTALL OK."
     ;;
 
   setup-env )

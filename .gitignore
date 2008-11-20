@@ -9,6 +9,7 @@ dead
 # -----------------------------------------------------------------------------
 
 # PROJECTS BELOW
+aksetup
 jhbuild
 pytools
 pymbolic
@@ -22,3 +23,4 @@ hedge
 pyrticle
 pyublasext
 experiments
+quiet-beam-sampling
