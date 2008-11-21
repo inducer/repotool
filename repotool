@@ -19,23 +19,28 @@ function emphasize()
   echo "------------------------------------------------------------------------"
 }
 
+function show_help()
+{
+  echo "$0 supports the following commands:"
+  echo "  list-{all,active}"
+  echo "  for-{all,active} [-v] CMD"
+  echo "  update-gitignore"
+  echo "  clone BASE-URL [SUFFIX]"
+  echo "  pull BASE-URL [SUFFIX] [BRANCH]"
+  echo "  status"
+  echo "  diff"
+  echo "  clean [sudo]"
+  echo "  install [python-command]"
+  echo "  setup-env"
+  echo "  env"
+}
+
 
 
 CMD="$1"
 case "$CMD" in
   help )
-    echo "$0 supports the following commands:"
-    echo "  list-{all,active}"
-    echo "  for-{all,active} [-v] CMD"
-    echo "  update-gitignore"
-    echo "  clone BASE-URL [SUFFIX]"
-    echo "  pull BASE-URL [SUFFIX] [BRANCH]"
-    echo "  status"
-    echo "  diff"
-    echo "  clean [sudo]"
-    echo "  install [python-command]"
-    echo "  setup-env"
-    echo "  env"
+    show_help
     ;;
 
   list-* )
@@ -151,6 +156,8 @@ case "$CMD" in
     ;;
 
   * )
+    show_help
+    echo
     echo "$0: invalid command $1."
     exit 1
     ;;
