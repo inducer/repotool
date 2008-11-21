@@ -25,7 +25,8 @@ CMD="$1"
 case "$CMD" in
   help )
     echo "$0 supports the following commands:"
-    echo "  {list,for}-{all,active}"
+    echo "  list-{all,active}"
+    echo "  for-{all,active} [-v] CMD"
     echo "  update-gitignore"
     echo "  clone BASE-URL [SUFFIX]"
     echo "  pull BASE-URL [SUFFIX] [BRANCH]"
@@ -37,25 +38,26 @@ case "$CMD" in
     echo "  env"
     ;;
 
-  list-all )
-    list_all_repos
+  list-* )
+    TP=${CMD##list-}
+    list_${TP}_repos
     ;;
 
-  list-active )
-    list_active_repos
-    ;;
-
-  for-all )
+  for-* )
     shift
-    for n in `list_all_repos`; do
-      (cd $n; "$@")
-    done
-    ;;
-
-  for-active )
-    shift
-    for n in `list_active_repos`; do
-      (cd $n; "$@")
+    TP=${CMD##for-}
+    if test "$1" = "-v"; then 
+      shift
+      VERBOSE=1
+    fi
+    for n in `list_${TP}_repos`; do
+      (
+      cd $n
+      if test "$VERBOSE" = 1; then
+        echo "*** $n"
+      fi
+      "$@"
+      )
     done
     ;;
 
@@ -89,7 +91,13 @@ case "$CMD" in
     SUFFIX="$3"
     BRANCH="${4:-master}"
     for n in `list_all_repos`; do
-      git pull $BASE_URL$n$SUFFIX
+      ( cd $n
+        emphasize "PULL $n"
+        if ! git pull $BASE_URL$n$SUFFIX $BRANCH ; then
+          emphasize "PULL IN $n FAILED" 
+          exit 1
+        fi
+      ) || exit 1
     done
     ;;
 
@@ -99,6 +107,7 @@ case "$CMD" in
       (cd $n; emphasize $n; git diff)
     done
     ;;
+
   status )
     git status
     for n in `list_all_repos`; do
@@ -126,7 +135,7 @@ case "$CMD" in
         cd $n
         if test -e setup.py; then
           emphasize "INSTALLING $n"
-          $PY_COMMAND setup.py install || (emphasize "COMMAND $CMD ON $n FAILED!" ; exit 1)
+          $PY_COMMAND setup.py install || emphasize "COMMAND $CMD ON $n FAILED!" ; exit 1
         fi
       ) || exit 1
     done
