@@ -1,5 +1,8 @@
 def read_repo_list(name):
-    return [x.strip() for x in open(name).readlines() if not x.strip().startswith("#")]
+    try:
+        return [x.strip() for x in open(name).readlines() if not x.strip().startswith("#")]
+    except IOError:
+        return ""
 
 all_repos = read_repo_list("subprojects")
 excluded_repos = read_repo_list("excluded-subprojects")
