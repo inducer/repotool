@@ -140,7 +140,10 @@ case "$CMD" in
         cd $n
         if test -e setup.py; then
           emphasize "INSTALLING $n"
-          $PY_COMMAND setup.py install || emphasize "COMMAND $CMD ON $n FAILED!" ; exit 1
+          if ! $PY_COMMAND setup.py install ; then 
+            emphasize "COMMAND $CMD ON $n FAILED!" 
+            exit 1
+          fi
         fi
       ) || exit 1
     done
