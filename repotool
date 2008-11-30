@@ -31,6 +31,7 @@ function show_help()
   echo "  diff"
   echo "  clean [sudo]"
   echo "  install [python-command]"
+  echo "  tags"
   echo "  setup-env"
   echo "  env"
 }
@@ -148,6 +149,10 @@ case "$CMD" in
       ) || exit 1
     done
     emphasize "INSTALL OK."
+    ;;
+
+  tags )
+    ctags --exclude=build -R `list_active_repos`
     ;;
 
   setup-env )

@@ -4,6 +4,7 @@ excluded-subprojects
 env/
 dead
 *.sess
+tags
 
 # -----------------------------------------------------------------------------
 # DO NOT CHANGE ANYTHING BELOW THIS LINE
