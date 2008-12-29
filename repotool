@@ -152,7 +152,7 @@ case "$CMD" in
     ;;
 
   tags )
-    ctags --exclude=build -R `list_active_repos`
+    ctags --exclude=build --exclude='*.html' -R `list_active_repos`
     ;;
 
   setup-env )
