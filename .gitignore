@@ -1,7 +1,7 @@
 excluded-subprojects
 .*.swp
 *~
-env/
+env
 dead
 *.sess
 tags
