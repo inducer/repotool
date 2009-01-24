@@ -34,6 +34,7 @@ function show_help()
   echo "  tags"
   echo "  setup-env"
   echo "  env"
+  echo "  gitserve"
 }
 
 
@@ -161,6 +162,10 @@ case "$CMD" in
 
   env )
     echo "export PATH=`pwd`/env/bin:$PATH":w
+    ;;
+
+  gitserve )
+    git daemon --export-all --verbose --base-path=`pwd` `pwd`
     ;;
 
   * )
