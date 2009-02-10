@@ -5,6 +5,7 @@ env
 dead
 *.sess
 tags
+TAGS
 
 # -----------------------------------------------------------------------------
 # DO NOT CHANGE ANYTHING BELOW THIS LINE
