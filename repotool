@@ -162,7 +162,9 @@ case "$CMD" in
     ;;
 
   env )
-    echo "export PATH=`pwd`/env/bin:$PATH":w
+    DIR=`dirname "$0"`
+    MYDIR=$(cd "$DIR" && pwd) 
+    echo "export PATH=$MYDIR/env/bin:$PATH"
     ;;
 
   gitserve )
