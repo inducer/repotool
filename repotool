@@ -31,7 +31,7 @@ function show_help()
   echo "  diff"
   echo "  clean [sudo]"
   echo "  install [python-command]"
-  echo "  tags"
+  echo "  {v,e}tags"
   echo "  setup-env"
   echo "  env"
   echo "  gitserve"
@@ -153,7 +153,17 @@ case "$CMD" in
     ;;
 
   tags )
+    echo "You now have to decide between 'etags' for Emacs and 'vtags' for vi--sorry."
+    exit 1
+    ;;
+
+  vtags )
+    rm -f tags TAGS
     ctags --exclude=build --exclude='*.html' -R `list_active_repos`
+    ;;
+    
+  etags )
+    rm -f tags TAGS
     ctags -e --exclude=build --exclude='*.html' -R `list_active_repos`
     ;;
 
