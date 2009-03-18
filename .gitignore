@@ -22,6 +22,7 @@ meshpy
 pylo
 codepy
 pycuda
+pyopencl
 pymetis
 hedge
 pyrticle
