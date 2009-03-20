@@ -25,7 +25,6 @@ function show_help()
   echo "  list-{all,active}"
   echo "  for-{all,active} [-v] CMD"
   echo "  update-gitignore"
-  echo "  clone BASE-URL [SUFFIX]"
   echo "  pull BASE-URL [SUFFIX] [BRANCH]"
   echo "  status"
   echo "  diff"
@@ -83,28 +82,22 @@ case "$CMD" in
     mv new-gitig .gitignore
     ;;
     
-  clone )
-    BASE_URL="$2"
-    SUFFIX="$3"
-    for n in `list_all_repos`; do
-      if ! test -d $n; then 
-        git clone $BASE_URL$n$SUFFIX
-      fi
-    done
-    ;;
-
   pull )
     BASE_URL="$2"
     SUFFIX="$3"
     BRANCH="${4:-master}"
     for n in `list_all_repos`; do
-      ( cd $n
-        emphasize "PULL $n"
-        if ! git pull $BASE_URL$n$SUFFIX $BRANCH ; then
-          emphasize "PULL IN $n FAILED" 
-          exit 1
-        fi
-      ) || exit 1
+      if ! test -d $n; then 
+        git clone $BASE_URL$n$SUFFIX
+      else
+        ( cd $n
+          emphasize "PULL $n"
+          if ! git pull $BASE_URL$n$SUFFIX $BRANCH ; then
+            emphasize "PULL IN $n FAILED" 
+            exit 1
+          fi
+        ) || exit 1
+      fi
     done
     ;;
 
