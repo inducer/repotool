@@ -82,7 +82,7 @@ case "$CMD" in
     mv new-gitig .gitignore
     ;;
     
-  pull )
+  clone | pull )
     BASE_URL="$2"
     SUFFIX="$3"
     BRANCH="${4:-master}"
