@@ -120,8 +120,8 @@ case "$CMD" in
     for n in `list_active_repos`; do
       (
         cd $n
-        if test -e setup.py && test -d build; then
-          $PREFIX rm -Rf build
+        if test -e setup.py ; then
+          $PREFIX rm -Rf build *.egg-info dist
         fi
       ) 
     done
