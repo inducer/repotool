@@ -30,6 +30,7 @@ function show_help()
   echo "  diff"
   echo "  clean [sudo]"
   echo "  install [python-command]"
+  echo "  develop [python-command]"
   echo "  {v,e}tags"
   echo "  setup-env"
   echo "  env"
@@ -127,7 +128,7 @@ case "$CMD" in
     done
     ;;
 
-  install )
+  install | develop )
     PY_COMMAND="${2:-python}"
     for n in `list_active_repos`; do
       (
@@ -135,7 +136,7 @@ case "$CMD" in
         cd $n
         if test -e setup.py; then
           emphasize "INSTALLING $n"
-          if ! $PY_COMMAND setup.py install ; then 
+          if ! $PY_COMMAND setup.py $CMD ; then 
             emphasize "COMMAND $CMD ON $n FAILED!" 
             exit 1
           fi

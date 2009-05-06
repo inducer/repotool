@@ -6,6 +6,7 @@ dead
 *.sess
 tags
 TAGS
+*.vim
 
 # -----------------------------------------------------------------------------
 # DO NOT CHANGE ANYTHING BELOW THIS LINE
