@@ -1,4 +1,5 @@
 excluded-subprojects
+extra-subprojects
 .*.swp
 *~
 env

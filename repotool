@@ -5,6 +5,9 @@ set -e
 function list_all_repos()
 {
   cat subprojects
+  if test -f extra-subprojects; then 
+    cat extra-subprojects
+  fi
 }
 
 function list_active_repos()
