@@ -100,10 +100,10 @@ case "$CMD" in
             exit 1
           else
             emphasize "PULL $n"
-            ##if ! git pull $BASE_URL$n$SUFFIX $BRANCH ; then
-              #emphasize "PULL IN $n FAILED" 
-              #exit 1
-            #fi
+            if ! git pull $BASE_URL$n$SUFFIX $BRANCH ; then
+              emphasize "PULL IN $n FAILED" 
+              exit 1
+            fi
           fi
         ) || exit 1
       fi
