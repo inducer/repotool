@@ -38,11 +38,13 @@ function show_help()
   echo "  setup-env"
   echo "  env"
   echo "  gitserve"
+  echo "  test"
 }
 
 
 
 CMD="$1"
+shift
 case "$CMD" in
   help )
     show_help
@@ -87,9 +89,9 @@ case "$CMD" in
     ;;
     
   clone | pull )
-    BASE_URL="$2"
-    SUFFIX="$3"
-    BRANCH="${4:-master}"
+    BASE_URL="$1"
+    SUFFIX="$2"
+    BRANCH="${3:-master}"
     for n in `list_all_repos`; do
       if ! test -d $n; then 
         git clone $BASE_URL$n$SUFFIX
@@ -125,7 +127,7 @@ case "$CMD" in
     ;;
 
   clean )
-    PREFIX="$2"
+    PREFIX="$1"
     for n in `list_active_repos`; do
       (
         cd $n
@@ -137,7 +139,7 @@ case "$CMD" in
     ;;
 
   install | develop )
-    PY_COMMAND="${2:-python}"
+    PY_COMMAND="${1:-python}"
     for n in `list_active_repos`; do
       (
         set -e
@@ -186,7 +188,7 @@ case "$CMD" in
   * )
     show_help
     echo
-    echo "$0: invalid command $1."
+    echo "$0: invalid command $CMD."
     exit 1
     ;;
 esac
