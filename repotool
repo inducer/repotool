@@ -93,7 +93,8 @@ case "$CMD" in
     BRANCH="${3:-master}"
     for n in `list_all_repos`; do
       if ! test -d $n; then 
-        git clone $BASE_URL$n$SUFFIX
+        emphasize "CLONE $n"
+        git clone --quiet $BASE_URL$n$SUFFIX
       else
         ( cd $n
           if test "$(git status | head -n 1)" != "# On branch master"; then
