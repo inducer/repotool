@@ -11,14 +11,23 @@ NOMPI_LOGFILE="$RUN_ID-nompi.log"
 MPI_LOGFILE="$RUN_ID-mpi.log"
 
 if ! test "$1" = "--log-ok"; then
-  if timelimit $0 --log-ok $RUN_ID > $LOGFILE 2>&1 \
+  if timelimit -t 10800 $0 --log-ok $RUN_ID > $LOGFILE 2>&1 \
     && tail -n 1 $NOMPI_LOGFILE | egrep '= [0-9]* passed' \
     && tail -n 1 $MPI_LOGFILE | egrep '= [0-9]* passed' \
     ; then
     echo "CHECK OK"
     exit 0
   else
-    cat "$LOGFILE" | mail -s "Regression Check Failed" hedge@tiker.net
+    mutt -s "Regression Check Failed" \
+      -a $LOGFILE -a $NOMPI_LOGFILE -a $MPI_LOGFILE \
+      hedge@tiker.net <<EOF
+Hi there,
+
+I'm sorry to report that the regression check failed.
+Details are attached.
+
+- Your guilty conscience
+EOF
     echo "CHECK FAILED"
     exit 1
   fi
@@ -42,9 +51,16 @@ cd "$RUN_ID"
 ./repotool setup-env
 eval `./repotool env`
 ./repotool install
+./repotool for-all -v git log -1 --pretty=format:%h,%ar,%s%n --no-color
 
 export LD_LIBRARY_PATH=$HOME/pool/lib
 export PATH=$PATH:$HOME/pool/cuda/bin
 
-python `which py.test` -k -mpi | tee "../$NOMPI_LOGFILE"
-python `which py.test` -k mpi | tee "../$MPI_LOGFILE"
+echo "---------------------------------------------------------"
+echo "NON-MPI TESTS"
+echo "---------------------------------------------------------"
+python `which py.test` -k -mpi > "../$NOMPI_LOGFILE" 2>&1 || true
+echo "---------------------------------------------------------"
+echo "MPI TESTS"
+echo "---------------------------------------------------------"
+python `which py.test` -k mpi > "../$MPI_LOGFILE" 2>&1 || true
