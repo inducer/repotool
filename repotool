@@ -56,7 +56,6 @@ case "$CMD" in
     ;;
 
   for-* )
-    shift
     TP=${CMD##for-}
     if test "$1" = "-v"; then 
       shift
