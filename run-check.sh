@@ -45,7 +45,10 @@ RUN_ID="$2"
 NOMPI_LOGFILE="$RUN_ID-nompi.log"
 MPI_LOGFILE="$RUN_ID-mpi.log"
 
-git clone http://git.tiker.net/trees/repotool.git "$RUN_ID"
+echo "---------------------------------------------------------"
+echo "cloning repotool"
+echo "---------------------------------------------------------"
+git clone --quiet http://git.tiker.net/trees/repotool.git "$RUN_ID"
 cd "$RUN_ID"
 ./repotool clone http://git.tiker.net/trees/ .git
 ./repotool setup-env
