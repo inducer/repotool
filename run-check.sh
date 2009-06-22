@@ -19,7 +19,7 @@ if ! test "$1" = "--log-ok"; then
     exit 0
   else
     mutt -s "Regression Check Failed" \
-      -a $LOGFILE -a $NOMPI_LOGFILE -a $MPI_LOGFILE \
+      -a $NOMPI_LOGFILE -a $MPI_LOGFILE -a $LOGFILE \
       hedge@tiker.net <<EOF
 Hi there,
 
