@@ -42,6 +42,8 @@ function show_help()
 }
 
 
+DIR=`dirname "$0"`
+MYDIR=$(cd "$DIR" && pwd) 
 
 CMD="$1"
 shift
@@ -176,14 +178,25 @@ case "$CMD" in
     ;;
 
   env )
-    DIR=`dirname "$0"`
-    MYDIR=$(cd "$DIR" && pwd) 
     echo "export PATH=$MYDIR/env/bin:$PATH"
     ;;
 
   gitserve )
     git daemon --export-all --verbose --base-path=`pwd` `pwd`
     ;;
+
+  start-over )
+    export PATH=$MYDIR/env/bin:$PATH
+    rm "$MYDIR/env" -Rf
+    $0 clean
+    $0 setup-env
+    if test "$1" = "install"; then
+      $0 install
+    else
+      $0 develop
+    fi
+    ;;
+
 
   * )
     show_help
