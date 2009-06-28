@@ -52,6 +52,7 @@ git clone --quiet http://git.tiker.net/trees/repotool.git "$RUN_ID"
 cd "$RUN_ID"
 ./repotool clone http://git.tiker.net/trees/ .git
 ./repotool setup-env
+easy_install -U py
 eval `./repotool env`
 ./repotool install
 ./repotool for-all -v git log -1 --pretty=format:%h,%ar,%s%n --no-color
