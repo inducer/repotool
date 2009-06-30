@@ -52,9 +52,9 @@ git clone --quiet http://git.tiker.net/trees/repotool.git "$RUN_ID"
 cd "$RUN_ID"
 ./repotool clone http://git.tiker.net/trees/ .git
 ./repotool setup-env
-easy_install -U py
 eval `./repotool env`
-./repotool install
+easy_install -U py
+./repotool install 
 ./repotool for-all -v git log -1 --pretty=format:%h,%ar,%s%n --no-color
 
 export LD_LIBRARY_PATH=$HOME/pool/lib
@@ -63,8 +63,10 @@ export PATH=$PATH:$HOME/pool/cuda/bin
 echo "---------------------------------------------------------"
 echo "NON-MPI TESTS"
 echo "---------------------------------------------------------"
-python `which py.test` -k -mpi > "../$NOMPI_LOGFILE" 2>&1 || true
+python `which py.test` -v \
+  `./repotool list-all` -k -mpi > "../$NOMPI_LOGFILE" 2>&1 || true
 echo "---------------------------------------------------------"
 echo "MPI TESTS"
 echo "---------------------------------------------------------"
-python `which py.test` -k mpi > "../$MPI_LOGFILE" 2>&1 || true
+python `which py.test` -v \
+  `./repotool list-all` -k mpi > "../$MPI_LOGFILE" 2>&1 || true
