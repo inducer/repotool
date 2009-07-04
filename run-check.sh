@@ -63,10 +63,10 @@ export PATH=$PATH:$HOME/pool/cuda/bin
 echo "---------------------------------------------------------"
 echo "NON-MPI TESTS"
 echo "---------------------------------------------------------"
-python `which py.test` -v \
+python `which py.test` \
   `./repotool list-all` -k -mpi > "../$NOMPI_LOGFILE" 2>&1 || true
 echo "---------------------------------------------------------"
 echo "MPI TESTS"
 echo "---------------------------------------------------------"
-python `which py.test` -v \
+python `which py.test` \
   `./repotool list-all` -k mpi > "../$MPI_LOGFILE" 2>&1 || true
