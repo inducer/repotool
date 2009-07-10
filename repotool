@@ -181,7 +181,7 @@ case "$CMD" in
     echo "export PATH=$MYDIR/env/bin:$PATH"
     ;;
 
-  gitserve )
+  serve | gitserve )
     git daemon --export-all --verbose --base-path=`pwd` `pwd`
     ;;
 
