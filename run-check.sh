@@ -16,10 +16,23 @@ if ! test "$1" = "--log-ok"; then
     && tail -n 1 $MPI_LOGFILE | egrep '= [0-9]* passed' \
     ; then
     echo "CHECK OK"
+
+    mutt -s "Regression Check Ok" \
+      -a "$NOMPI_LOGFILE" "$MPI_LOGFILE" "$LOGFILE" -- \
+      hedge@tiker.net <<EOF
+Hi there,
+
+No failures were encountered during the regression check.
+
+- The seven testing dwarves
+EOF
     exit 0
   else
+    touch $NOMPI_LOGFILE
+    touch $MPI_LOGFILE
+    touch $LOGFILE
     mutt -s "Regression Check Failed" \
-      -a $NOMPI_LOGFILE -a $MPI_LOGFILE -a $LOGFILE \
+      -a "$NOMPI_LOGFILE" "$MPI_LOGFILE" "$LOGFILE" -- \
       hedge@tiker.net <<EOF
 Hi there,
 
@@ -63,10 +76,10 @@ export PATH=$PATH:$HOME/pool/cuda/bin
 echo "---------------------------------------------------------"
 echo "NON-MPI TESTS"
 echo "---------------------------------------------------------"
-python `which py.test` -v \
+python `which py.test` \
   `./repotool list-all` -k -mpi > "../$NOMPI_LOGFILE" 2>&1 || true
 echo "---------------------------------------------------------"
 echo "MPI TESTS"
 echo "---------------------------------------------------------"
-python `which py.test` -v \
+python `which py.test` \
   `./repotool list-all` -k mpi > "../$MPI_LOGFILE" 2>&1 || true
