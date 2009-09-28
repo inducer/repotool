@@ -11,7 +11,7 @@ NOMPI_LOGFILE="$RUN_ID-nompi.log"
 MPI_LOGFILE="$RUN_ID-mpi.log"
 
 if ! test "$1" = "--log-ok"; then
-  if timelimit -t 18000 $0 --log-ok $RUN_ID > $LOGFILE 2>&1 \
+  if timelimit -t 24000 $0 --log-ok $RUN_ID > $LOGFILE 2>&1 \
     && tail -n 1 $NOMPI_LOGFILE | egrep '= [0-9]* passed' \
     && tail -n 1 $MPI_LOGFILE | egrep '= [0-9]* passed' \
     ; then

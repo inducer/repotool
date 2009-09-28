@@ -124,7 +124,7 @@ case "$CMD" in
   status )
     git status || true
     for n in `list_all_repos`; do
-      (cd $n; emphasize $n; git status)
+      (cd $n; emphasize $n; (git status || true))
     done
     ;;
 
