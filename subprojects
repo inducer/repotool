@@ -3,7 +3,6 @@ jhbuild
 pytools
 pymbolic
 pyublas
-boostmpi
 meshpy
 pylo
 codepy
