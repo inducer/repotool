@@ -165,7 +165,7 @@ case "$CMD" in
 
   vtags )
     rm -f tags TAGS
-    ctags --exclude=build --exclude='*.html' -R `list_active_repos`
+    ctags --exclude=build --python-kinds='-i' --exclude='*.html' -R `list_active_repos`
     ;;
     
   etags )
