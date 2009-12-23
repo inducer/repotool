@@ -8,6 +8,7 @@ dead
 tags
 TAGS
 *.vim
+distribute*tar.gz
 
 # -----------------------------------------------------------------------------
 # DO NOT CHANGE ANYTHING BELOW THIS LINE
