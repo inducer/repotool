@@ -174,7 +174,7 @@ case "$CMD" in
     ;;
 
   setup-env )
-    virtualenv env
+    virtualenv --distribute env
     ;;
 
   env )
