@@ -12,7 +12,7 @@ function list_all_repos()
 
 function list_active_repos()
 {
-  python list-active-repos.py
+  python $MYDIR/list-active-repos.py $MYDIR
 }
 
 function emphasize()
@@ -163,14 +163,13 @@ case "$CMD" in
     exit 1
     ;;
 
-  vtags )
+  etags | vtags )
+    if test "$CMD" = "vtags" ; then
+      CTAGS_EXTRA_OPTS="-e"
+    fi
     rm -f tags TAGS
-    ctags --exclude=build --python-kinds='-i' --exclude='*.html' -R `list_active_repos`
-    ;;
-    
-  etags )
-    rm -f tags TAGS
-    ctags -e --exclude=build --exclude='*.html' -R `list_active_repos`
+    ctags $CTAGS_EXTRA_OPTS --exclude=build --python-kinds='-i' \
+      --exclude='*.html' -R `list_active_repos` $MYDIR
     ;;
 
   setup-env )
