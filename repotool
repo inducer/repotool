@@ -100,14 +100,18 @@ case "$CMD" in
       else
         ( cd $n
           if test "$(git status | head -n 1)" != "# On branch master"; then
-            emphasize "$n NOT ON MASTER BRANCH -- ABORTING"
-            exit 1
-          else
-            emphasize "PULL $n"
-            if ! git pull $BASE_URL$n$SUFFIX $BRANCH ; then
-              emphasize "PULL IN $n FAILED" 
+            emphasize "$n NOT ON MASTER BRANCH"
+            git status | head -n 1
+            echo -n "Continue? [n]"
+            read ANSWER
+            if ! test "$ANSWER" = "y"; then
               exit 1
             fi
+          fi
+          emphasize "PULL $n"
+          if ! git pull $BASE_URL$n$SUFFIX $BRANCH ; then
+            emphasize "PULL IN $n FAILED" 
+            exit 1
           fi
         ) || exit 1
       fi
