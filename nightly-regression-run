@@ -90,7 +90,7 @@ echo "---------------------------------------------------------"
 echo "installing prerequsistes"
 echo "---------------------------------------------------------"
 easy_install -U py
-easy_install http://tiker.net/hedgestuff/mpi4py-1.1.0patch.tar.gz
+easy_install mpi4py
 echo "---------------------------------------------------------"
 echo "building"
 echo "---------------------------------------------------------"
@@ -112,10 +112,10 @@ function run_tests()
 
 }
 
-run_tests $PLAIN_LOGFILE -k "-mpi -cl -cuda"
-run_tests $MPI_LOGFILE -k "mpi -cl -cuda"
-run_tests $CUDA_LOGFILE -k "-mpi -cl cuda"
-run_tests $CL_LOGFILE -k "-mpi cl -cuda"
+run_tests $PLAIN_LOGFILE -k "-mpi -opencl -cuda"
+run_tests $MPI_LOGFILE -k "mpi -opencl -cuda"
+run_tests $CUDA_LOGFILE -k "-mpi -opencl cuda"
+run_tests $CL_LOGFILE -k "-mpi opencl -cuda"
 echo "---------------------------------------------------------"
 echo "Finished at:"
 date

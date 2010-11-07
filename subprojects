@@ -4,12 +4,12 @@ pytools
 pymbolic
 pyublas
 meshpy
-pylo
+pyvisfile
 codepy
 pycuda
 pyopencl
 pymetis
-hedge
 pyrticle
 pyublasext
 quiet-beam-sampling
+hedge

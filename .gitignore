@@ -20,15 +20,13 @@ jhbuild
 pytools
 pymbolic
 pyublas
-boostmpi
 meshpy
-pylo
+pyvisfile
 codepy
 pycuda
 pyopencl
 pymetis
-hedge
 pyrticle
 pyublasext
-experiments
 quiet-beam-sampling
+hedge
