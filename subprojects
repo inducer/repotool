@@ -11,6 +11,5 @@ pyopencl
 pymetis
 pyublasext
 quiet-beam-sampling
-# hedge must come before pyrticle
 hedge
 pyrticle
