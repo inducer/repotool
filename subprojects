@@ -9,7 +9,8 @@ codepy
 pycuda
 pyopencl
 pymetis
-pyrticle
 pyublasext
 quiet-beam-sampling
+# hedge must come before pyrticle
 hedge
+pyrticle
