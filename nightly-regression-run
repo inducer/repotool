@@ -4,8 +4,11 @@ set -e
 
 MYSELF=$(readlink -f $0)
 
-mkdir -p /tmp/regression-check
-cd /tmp/regression-check
+mkdir -p /home/andreas/regression-check
+find /home/andreas/regression-check -depth -mtime +5 -ctime +5 ! -type d -delete
+find /home/andreas/regression-check -depth -mtime +5 -ctime +5 -type d -delete
+cd /home/andreas/regression-check
+
 
 RUN_ID="run-`date +%Y-%m-%d-%H%M`"
 
@@ -89,8 +92,8 @@ eval `./repotool env`
 echo "---------------------------------------------------------"
 echo "installing prerequsistes"
 echo "---------------------------------------------------------"
-easy_install -U py
-easy_install mpi4py
+pip install pytest
+pip install mpi4py
 echo "---------------------------------------------------------"
 echo "building"
 echo "---------------------------------------------------------"
