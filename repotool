@@ -102,8 +102,11 @@ case "$CMD" in
           if test "$(git status | head -n 1)" != "# On branch master"; then
             emphasize "$n NOT ON MASTER BRANCH"
             git status | head -n 1
-            echo -n "Continue? [n]"
+            echo -n "Continue? Skip? [ns]"
             read ANSWER
+            if test "$ANSWER" = "s"; then
+              continue
+            fi
             if ! test "$ANSWER" = "y"; then
               exit 1
             fi
@@ -177,7 +180,7 @@ case "$CMD" in
     ;;
 
   setup-env )
-    virtualenv --distribute env
+    virtualenv env
     ;;
 
   env )
