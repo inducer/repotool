@@ -21,12 +21,13 @@ pytools
 pymbolic
 pyublas
 meshpy
+datapyle
 pyvisfile
 codepy
 pycuda
 pyopencl
 pymetis
-pyrticle
 pyublasext
 quiet-beam-sampling
 hedge
+pyrticle

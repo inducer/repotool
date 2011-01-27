@@ -4,6 +4,7 @@ pytools
 pymbolic
 pyublas
 meshpy
+datapyle
 pyvisfile
 codepy
 pycuda
