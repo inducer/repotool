@@ -6,6 +6,7 @@ pyublas
 meshpy
 datapyle
 pyvisfile
+cgen
 codepy
 pycuda
 pyopencl
