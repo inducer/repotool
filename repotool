@@ -188,7 +188,7 @@ case "$CMD" in
     ;;
 
   serve | gitserve )
-    git daemon --export-all --verbose --base-path=`pwd` `pwd`
+    git daemon --enable=receive-pack --export-all --verbose --base-path=`pwd` `pwd`
     ;;
 
   start-over )
