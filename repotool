@@ -5,7 +5,7 @@ set -e
 function list_all_repos()
 {
   cat subprojects
-  if test -f extra-subprojects; then 
+  if test -f extra-subprojects; then
     cat extra-subprojects
   fi
 }
@@ -43,7 +43,7 @@ function show_help()
 
 
 DIR=`dirname "$0"`
-MYDIR=$(cd "$DIR" && pwd) 
+MYDIR=$(cd "$DIR" && pwd)
 
 CMD="$1"
 shift
@@ -59,7 +59,7 @@ case "$CMD" in
 
   for-* )
     TP=${CMD##for-}
-    if test "$1" = "-v"; then 
+    if test "$1" = "-v"; then
       shift
       VERBOSE=1
     fi
@@ -88,15 +88,16 @@ case "$CMD" in
     ) < .gitignore > new-gitig
     mv new-gitig .gitignore
     ;;
-    
+
   clone | pull )
     BASE_URL="$1"
     SUFFIX="$2"
     BRANCH="${3:-master}"
     for n in `list_all_repos`; do
-      if ! test -d $n; then 
+      if ! test -d $n; then
         emphasize "CLONE $n"
         git clone --quiet $BASE_URL$n$SUFFIX
+        (cd $n && git submodule update && git submodule update )
       else
         ( cd $n
           if test "$(git status | head -n 1)" != "# On branch master"; then
@@ -113,7 +114,15 @@ case "$CMD" in
           fi
           emphasize "PULL $n"
           if ! git pull $BASE_URL$n$SUFFIX $BRANCH ; then
-            emphasize "PULL IN $n FAILED" 
+            emphasize "PULL IN $n FAILED"
+            exit 1
+          fi
+          if ! git submodule init; then
+            emphasize "SUBMODULE INIT IN $n FAILED"
+            exit 1
+          fi
+          if ! git submodule update; then
+            emphasize "SUBMODULE UPDATE IN $n FAILED"
             exit 1
           fi
         ) || exit 1
@@ -143,7 +152,7 @@ case "$CMD" in
         if test -e setup.py ; then
           $PREFIX rm -Rf build *.egg-info dist
         fi
-      ) 
+      )
     done
     ;;
 
@@ -155,8 +164,8 @@ case "$CMD" in
         cd $n
         if test -e setup.py; then
           emphasize "INSTALLING $n"
-          if ! $PY_COMMAND setup.py $CMD ; then 
-            emphasize "COMMAND $CMD ON $n FAILED!" 
+          if ! $PY_COMMAND setup.py $CMD ; then
+            emphasize "COMMAND $CMD ON $n FAILED!"
             exit 1
           fi
         fi
