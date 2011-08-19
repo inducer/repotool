@@ -202,7 +202,7 @@ case "$CMD" in
 
   start-over )
     export PATH=$MYDIR/env/bin:$PATH
-    rm "$MYDIR/env" -Rf
+    rm  -Rf "$MYDIR/env"
     $0 clean
     $0 setup-env
     if test "$1" = "install"; then

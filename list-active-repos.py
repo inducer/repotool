@@ -14,7 +14,12 @@ all_repos = (read_repo_list(join(my_dir, "subprojects"))
 excluded_repos = read_repo_list(join(my_dir, "excluded-subprojects"))
 
 for x in excluded_repos:
-    all_repos.remove(x)
+    try:
+        all_repos.remove(x)
+    except ValueError:
+        print>>sys.stderr, "----------------------------------------------------------------------------------"
+        print>>sys.stderr, "*** ERROR: %s in excluded-subprojects isn't a valid subproject to start with" % x
+        print>>sys.stderr, "----------------------------------------------------------------------------------"
 
 for x in all_repos:
     print join(my_dir, x)
