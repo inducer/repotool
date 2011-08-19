@@ -97,7 +97,7 @@ case "$CMD" in
       if ! test -d $n; then
         emphasize "CLONE $n"
         git clone --quiet $BASE_URL$n$SUFFIX
-        (cd $n && git submodule update && git submodule update )
+        (cd $n && git submodule init && git submodule update )
       else
         ( cd $n
           if test "$(git status | head -n 1)" != "# On branch master"; then
