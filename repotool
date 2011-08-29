@@ -4,9 +4,9 @@ set -e
 
 function list_all_repos()
 {
-  cat subprojects
-  if test -f extra-subprojects; then
-    cat extra-subprojects
+  cat $MYDIR/subprojects
+  if test -f $MYDIR/extra-subprojects; then
+    cat $MYDIR/extra-subprojects
   fi
 }
 
