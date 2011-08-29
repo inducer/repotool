@@ -45,6 +45,9 @@ function show_help()
 DIR=`dirname "$0"`
 MYDIR=$(cd "$DIR" && pwd)
 
+ACTIVE_REPOS="$(list_active_repos)"
+ALL_REPOS="$(list_all_repos)"
+
 CMD="$1"
 shift
 case "$CMD" in
@@ -146,7 +149,7 @@ case "$CMD" in
 
   clean )
     PREFIX="$1"
-    for n in `list_active_repos`; do
+    for n in $ACTIVE_REPOS; do
       (
         cd $n
         if test -e setup.py ; then
@@ -158,7 +161,7 @@ case "$CMD" in
 
   install | develop )
     PY_COMMAND="${1:-python}"
-    for n in `list_active_repos`; do
+    for n in $ACTIVE_REPOS; do
       (
         set -e
         cd $n
@@ -185,7 +188,7 @@ case "$CMD" in
     fi
     rm -f tags TAGS
     ctags $CTAGS_EXTRA_OPTS --exclude=build --python-kinds='-i' \
-      --exclude='*.html' -R `list_active_repos` $MYDIR
+      --exclude='*.html' -R $ACTIVE_REPOS $MYDIR
     ;;
 
   setup-env )

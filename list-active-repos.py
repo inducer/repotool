@@ -18,8 +18,10 @@ for x in excluded_repos:
         all_repos.remove(x)
     except ValueError:
         print>>sys.stderr, "----------------------------------------------------------------------------------"
-        print>>sys.stderr, "*** ERROR: %s in excluded-subprojects isn't a valid subproject to start with" % x
+        print>>sys.stderr, "*** ERROR: %s in excluded-subprojects isn't a valid subproject" % x
         print>>sys.stderr, "----------------------------------------------------------------------------------"
+        import sys
+        sys.exit(1)
 
 for x in all_repos:
     print join(my_dir, x)
