@@ -4,9 +4,9 @@ set -e
 
 function list_all_repos()
 {
-  cat subprojects
-  if test -f extra-subprojects; then 
-    cat extra-subprojects
+  cat $MYDIR/subprojects
+  if test -f $MYDIR/extra-subprojects; then
+    cat $MYDIR/extra-subprojects
   fi
 }
 
@@ -43,7 +43,10 @@ function show_help()
 
 
 DIR=`dirname "$0"`
-MYDIR=$(cd "$DIR" && pwd) 
+MYDIR=$(cd "$DIR" && pwd)
+
+ACTIVE_REPOS="$(list_active_repos)"
+ALL_REPOS="$(list_all_repos)"
 
 CMD="$1"
 shift
@@ -59,7 +62,7 @@ case "$CMD" in
 
   for-* )
     TP=${CMD##for-}
-    if test "$1" = "-v"; then 
+    if test "$1" = "-v"; then
       shift
       VERBOSE=1
     fi
@@ -88,29 +91,41 @@ case "$CMD" in
     ) < .gitignore > new-gitig
     mv new-gitig .gitignore
     ;;
-    
+
   clone | pull )
     BASE_URL="$1"
     SUFFIX="$2"
     BRANCH="${3:-master}"
     for n in `list_all_repos`; do
-      if ! test -d $n; then 
+      if ! test -d $n; then
         emphasize "CLONE $n"
         git clone --quiet $BASE_URL$n$SUFFIX
+        (cd $n && git submodule init && git submodule update )
       else
         ( cd $n
           if test "$(git status | head -n 1)" != "# On branch master"; then
             emphasize "$n NOT ON MASTER BRANCH"
             git status | head -n 1
-            echo -n "Continue? [n]"
+            echo -n "Continue? Skip? [ns]"
             read ANSWER
+            if test "$ANSWER" = "s"; then
+              continue
+            fi
             if ! test "$ANSWER" = "y"; then
               exit 1
             fi
           fi
           emphasize "PULL $n"
           if ! git pull $BASE_URL$n$SUFFIX $BRANCH ; then
-            emphasize "PULL IN $n FAILED" 
+            emphasize "PULL IN $n FAILED"
+            exit 1
+          fi
+          if ! git submodule init; then
+            emphasize "SUBMODULE INIT IN $n FAILED"
+            exit 1
+          fi
+          if ! git submodule update; then
+            emphasize "SUBMODULE UPDATE IN $n FAILED"
             exit 1
           fi
         ) || exit 1
@@ -134,26 +149,26 @@ case "$CMD" in
 
   clean )
     PREFIX="$1"
-    for n in `list_active_repos`; do
+    for n in $ACTIVE_REPOS; do
       (
         cd $n
         if test -e setup.py ; then
           $PREFIX rm -Rf build *.egg-info dist
         fi
-      ) 
+      )
     done
     ;;
 
   install | develop )
     PY_COMMAND="${1:-python}"
-    for n in `list_active_repos`; do
+    for n in $ACTIVE_REPOS; do
       (
         set -e
         cd $n
         if test -e setup.py; then
           emphasize "INSTALLING $n"
-          if ! $PY_COMMAND setup.py $CMD ; then 
-            emphasize "COMMAND $CMD ON $n FAILED!" 
+          if ! $PY_COMMAND setup.py $CMD ; then
+            emphasize "COMMAND $CMD ON $n FAILED!"
             exit 1
           fi
         fi
@@ -173,11 +188,11 @@ case "$CMD" in
     fi
     rm -f tags TAGS
     ctags $CTAGS_EXTRA_OPTS --exclude=build --python-kinds='-i' \
-      --exclude='*.html' -R `list_active_repos` $MYDIR
+      --exclude='*.html' -R $ACTIVE_REPOS $MYDIR
     ;;
 
   setup-env )
-    virtualenv --distribute env
+    virtualenv env
     ;;
 
   env )
@@ -185,12 +200,12 @@ case "$CMD" in
     ;;
 
   serve | gitserve )
-    git daemon --export-all --verbose --base-path=`pwd` `pwd`
+    git daemon --enable=receive-pack --export-all --verbose --base-path=`pwd` `pwd`
     ;;
 
   start-over )
     export PATH=$MYDIR/env/bin:$PATH
-    rm "$MYDIR/env" -Rf
+    rm  -Rf "$MYDIR/env"
     $0 clean
     $0 setup-env
     if test "$1" = "install"; then
