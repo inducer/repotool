@@ -5,8 +5,8 @@ set -e
 MYSELF=$(readlink -f $0)
 
 mkdir -p /home/andreas/regression-check
-find /home/andreas/regression-check -depth -mtime +5 -ctime +5 ! -type d -delete
-find /home/andreas/regression-check -depth -mtime +5 -ctime +5 -type d -delete
+find /home/andreas/regression-check -depth -mtime +5 -ctime +5 ! -type d -delete || true
+find /home/andreas/regression-check -depth -type d -empty -delete || true
 cd /home/andreas/regression-check
 
 
@@ -44,7 +44,7 @@ if ! test "$1" = "--log-ok"; then
 
     mutt -s "Regression Check Ok" \
       -a $ALL_PYTEST_LOGFILES "$LOGFILE" -- \
-      hedge@tiker.net <<EOF
+      andreas@tiker.net <<EOF
 Hi there,
 
 No failures were encountered during the regression check.
@@ -58,7 +58,7 @@ EOF
     touch $ALL_PYTEST_LOGFILES $LOGFILE
     mutt -s "Regression Check Failed" \
       -a $ALL_PYTEST_LOGFILES "$LOGFILE" -- \
-      hedge@tiker.net <<EOF
+      andreas@tiker.net <<EOF
 Hi there,
 
 I'm sorry to report that the regression check failed.
@@ -93,6 +93,7 @@ echo "---------------------------------------------------------"
 echo "installing prerequsistes"
 echo "---------------------------------------------------------"
 pip install pytest
+pip install pytest-xdist
 pip install mpi4py
 echo "---------------------------------------------------------"
 echo "building"
@@ -110,9 +111,13 @@ function run_tests()
   echo "---------------------------------------------------------"
   echo "TESTS FOR $this_logfile"
   echo "---------------------------------------------------------"
-  python `which py.test` \
-    `./repotool list-all` "$@" > "../$this_logfile" 2>&1 || true
-
+  for project in $(./repotool list-all); do
+    echo "---------------------------------------------------------" >> "../$this_logfile"
+    echo "TESTS FOR $this_logfile IN PROJECT $project" >> "../$this_logfile"
+    echo "---------------------------------------------------------" >> "../$this_logfile"
+    python `which py.test` --tb=native \
+      $project "$@" >> "../$this_logfile" 2>&1 || true
+  done
 }
 
 run_tests $PLAIN_LOGFILE -k "-mpi -opencl -cuda"
