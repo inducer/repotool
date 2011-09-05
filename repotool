@@ -100,6 +100,7 @@ case "$CMD" in
       if ! test -d $n; then
         emphasize "CLONE $n"
         git clone --quiet $BASE_URL$n$SUFFIX
+        emphasize "SUBMODULES $n"
         (cd $n && git submodule init && git submodule update )
       else
         ( cd $n
@@ -120,6 +121,7 @@ case "$CMD" in
             emphasize "PULL IN $n FAILED"
             exit 1
           fi
+          emphasize "SUBMODULES $n"
           if ! git submodule init; then
             emphasize "SUBMODULE INIT IN $n FAILED"
             exit 1
