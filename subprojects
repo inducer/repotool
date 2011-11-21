@@ -12,4 +12,5 @@ pycuda
 pyopencl
 pymetis
 pyublasext
+islpy
 hedge
