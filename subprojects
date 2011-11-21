@@ -12,6 +12,4 @@ pycuda
 pyopencl
 pymetis
 pyublasext
-quiet-beam-sampling
 hedge
-pyrticle
