@@ -194,7 +194,7 @@ case "$CMD" in
     ;;
 
   setup-env )
-    virtualenv env
+    virtualenv --system-site-packages env
     ;;
 
   env )
