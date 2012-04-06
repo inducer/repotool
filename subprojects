@@ -13,3 +13,4 @@ pyopencl
 pymetis
 pyublasext
 hedge
+islpy
